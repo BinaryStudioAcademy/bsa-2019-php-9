@@ -63,4 +63,11 @@ Here are links to the images:
 Thanks!
 ```
 
+### Установка
 
+```bash
+cp .env.example .env
+docker-compose up -d
+docker-compose run --rm composer install
+docker-compose exec php php artisan key:generate
+```

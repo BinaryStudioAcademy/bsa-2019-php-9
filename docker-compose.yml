@@ -8,11 +8,22 @@ services:
         - UID=1000
         - GID=1000
     volumes:
-      - ./:/var/www/html
-    ports:
-      - 8000:8000
+      - ./:/app
     networks:
       - queue
+      - broadcasting
+  webserver:
+    image: nginx:stable-alpine
+    working_dir: /app
+    ports:
+      - 8000:80
+    volumes:
+      - .:/app
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - websocket
+      - php
+    networks:
       - broadcasting
   composer:
     image: composer:latest
@@ -21,8 +32,6 @@ services:
         - ./.composer:/composer
   beanstalk:
     image: schickling/beanstalkd:latest
-    ports:
-      - 11300:11300
     networks:
       - queue
   mariadb:
@@ -49,6 +58,8 @@ services:
       dockerfile: .docker/websocket/Dockerfile
       context: .
     working_dir: /myapp
+    depends_on:
+      - redis
     networks:
       - broadcasting
     volumes:
@@ -56,4 +67,3 @@ services:
 networks:
   queue:
   broadcasting:
-
