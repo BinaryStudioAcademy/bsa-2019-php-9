@@ -16,7 +16,7 @@
 
 ```
 POST /api/photos
-multipart/data
+multipart/form-data
 ```
 
 на который необходимо отправить файл с изображением.
@@ -70,9 +70,16 @@ cp .env.example .env
 docker-compose up -d
 docker-compose run --rm composer install
 docker-compose exec php php artisan key:generate
+docker-compose run --rm node npm install
 ```
 
-Для установки зависимости composer нужно выполнить:
+Для того чтобы ваши скрипты билдились автоматически, выполните:
+
+```
+docker-compose run --rm node npm run watch
+```
+
+Для установки зависимостей composer:
 
 ```
 docker-compose run --rm composer require ...
