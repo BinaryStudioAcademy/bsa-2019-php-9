@@ -51,6 +51,7 @@ services:
       - broadcasting
   node:
     image: node:12
+    working_dir: /myapp
     volumes:
       - ./:/myapp
   websocket:

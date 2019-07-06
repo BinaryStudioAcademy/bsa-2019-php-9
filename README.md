@@ -71,3 +71,15 @@ docker-compose up -d
 docker-compose run --rm composer install
 docker-compose exec php php artisan key:generate
 ```
+
+Для установки зависимости composer нужно выполнить:
+
+```
+docker-compose run --rm composer require ...
+```
+
+Для того чтобы выполнить npm комманду:
+
+```
+docker-compose run --rm node npm ...
+```
