@@ -36,7 +36,7 @@ docker-compose up -d
 cp .env.example .env
 docker-compose exec composer install
 docker-compose exec php php artisan key:generate
-docker-compose exec php php migrate
+docker-compose exec php php artisan migrate
 ```
 
 2) Настройте очередь сообщений `beanstalkd` в Laravel. В предоставленном Docker окружении beanstalk сервер уже установлен. Имейте ввиду, что внутри контейнера имя хоста соответствует имени сервиса в docker-compose (т.е. hostname = 'beanstalk').

@@ -2,48 +2,46 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <div class="card">
-                    <div class="card-header">Resize Photo</div>
-
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4 file-input-container">
-                                <file-input
+                <auth>
+                    <template v-slot:title>Resize Photo </template>
+                    <div class="row">
+                        <div class="col-md-4 file-input-container">
+                            <file-input
+                                :status="status"
+                                v-on:change="onFile"
+                            />
+                        </div>
+                        <div class="col-md-8">
+                            <div class="image-container">
+                                <image-container
+                                    :src="images['100']"
+                                    :width="100"
+                                    :height="100"
                                     :status="status"
-                                    v-on:change="onFile"
                                 />
-                            </div>
-                            <div class="col-md-8">
-                                <div class="image-container">
-                                    <image-container
-                                        :src="images['100']"
-                                        :width="100"
-                                        :height="100"
-                                        :status="status"
-                                    />
-                                    <image-container
-                                        :src="images['150']"
-                                        :width="150"
-                                        :height="150"
-                                        :status="status"
-                                    />
-                                    <image-container
-                                        :src="images['250']"
-                                        :width="250"
-                                        :height="250"
-                                        :status="status"
-                                    />
-                                </div>
+                                <image-container
+                                    :src="images['150']"
+                                    :width="150"
+                                    :height="150"
+                                    :status="status"
+                                />
+                                <image-container
+                                    :src="images['250']"
+                                    :width="250"
+                                    :height="250"
+                                    :status="status"
+                                />
                             </div>
                         </div>
                     </div>
-                </div>
+                </auth>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import Auth from './Auth/Auth'
 import FileInput from './FileInput';
 import ImageContainer from './Image';
 import requestService from '../services/requestService';
@@ -51,7 +49,8 @@ import requestService from '../services/requestService';
 export default {
     components: {
         'file-input': FileInput,
-        'image-container': ImageContainer
+        'image-container': ImageContainer,
+        'auth': Auth
     },
     data() {
         return {

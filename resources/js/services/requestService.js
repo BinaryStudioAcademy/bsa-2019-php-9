@@ -1,22 +1,38 @@
-const requestService = {
-    post: (url, data) =>  {
-        return axios.post(url, data, {
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
-    },
-    file: (url, file) => {
-        const fd = new FormData();
+import authService from './authService';
 
-        fd.append('file', file);
+const auth = (request) => {
+    const user = authService.getUser();
+    const token = authService.getToken(user.email, user.password);
 
-        return axios.post(url, fd, {
-            headers: {
-                'Content-type': 'multipart/form-data'
-            }
-        });
+    return request({
+        'WWw-Authenticate': `${token}`
+    });
+};
+
+const post = (url, data, headers = {}) => auth((authHeader) => axios.post(url, data, {
+    headers: {
+        'Content-type': 'application/json',
+        ...headers,
+        ...authHeader
     }
+}));
+
+const get = (url, params) => auth((headers) => axios.get(url, { params }, { headers }));
+
+const file = (url, file) => {
+    const fd = new FormData();
+
+    fd.append('file', file);
+
+    return post(url, fd, {
+        'Content-type': 'multipart/form-data',        
+    });
+}
+
+const requestService = {
+    post,
+    get,
+    file
 };
 
 export default requestService;
