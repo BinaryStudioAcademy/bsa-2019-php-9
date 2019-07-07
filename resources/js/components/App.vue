@@ -9,7 +9,7 @@
                         <div class="row">
                             <div class="col-md-4 file-input-container">
                                 <file-input
-                                    :hasLoaded="hasLoaded"
+                                    :status="status"
                                     v-on:change="onFile"
                                 />
                             </div>
@@ -19,16 +19,19 @@
                                         :src="images['100']"
                                         :width="100"
                                         :height="100"
+                                        :status="status"
                                     />
                                     <image-container
                                         :src="images['150']"
                                         :width="150"
                                         :height="150"
+                                        :status="status"
                                     />
                                     <image-container
                                         :src="images['250']"
                                         :width="250"
                                         :height="250"
+                                        :status="status"
                                     />
                                 </div>
                             </div>
@@ -42,22 +45,22 @@
 
 <script>
 import FileInput from './FileInput';
-import image from './Image';
+import ImageContainer from './Image';
+import requestService from '../services/requestService';
 
 export default {
     components: {
         'file-input': FileInput,
-        'image-container': image
+        'image-container': ImageContainer
     },
     data() {
         return {
-            hasLoaded: null,
+            status: '',
             images: {
                 '100': '',
                 '150': '',
                 '250': ''
-            },
-            timer: null
+            }
         };
     },
     methods: {
@@ -65,50 +68,24 @@ export default {
             this.images[size] = url;
         },
 
-        imageUploaded(status) {
-            this.hasLoaded = status;
-
-            if (this.timer) {
-                clearTimeout(this.timer);
-            }
-
-            this.timer = setTimeout(() => {
-                this.hasLoaded = null;
-            }, 5000);
+        success() {
+            this.status = 'success';
         },
 
-        sendFile(url, file) {
-            const fd = new FormData();
+        fail() {
+            this.status = 'fail';
+        },
 
-            fd.append('file', file);
-
-            return axios.post(url, fd, {
-                headers: {
-                    'Content-type': 'multipart/form-data'
-                }
-            });
+        processing() {
+            this.status = 'processing';
         },
 
         onFile(file) {
-            const YOUR_API_URL = '';
-
-            return this.sendFile(YOUR_API_URL, file)
-                .then(() => {
-                    this.imageUploaded(true);
-                })
-                .catch((error) => {
-                    this.imageUploaded(false);
-                    console.error(error);
-                });
+            // !! HERE SENDING FILE !!
         }
     },
     mounted() {
-        // !! Here should be subscription on notifications from server !!
-
-        // Echo.channel(`notifications`)
-        //     .listen('.message', (e) => {
-        //         console.log(e.message);
-        //     });
+        /* !! HERE NOTIFICATION SUBSCRIPTION !! */
     }
 }
 </script>

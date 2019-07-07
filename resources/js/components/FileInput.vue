@@ -6,13 +6,15 @@
 </template>
 <script>
     export default {
-        props: ['hasLoaded'],
+        props: {
+            status: String
+        },
         computed: {
             success() {
-                return this.hasLoaded === true;
+                return this.status === 'success';
             },
             fail() {
-                return this.hasLoaded === false;
+                return this.status === 'fail';
             }
         },
         methods: {
