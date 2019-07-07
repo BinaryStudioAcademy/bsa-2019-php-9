@@ -49,10 +49,17 @@ services:
     image: redis:5
     networks:
       - broadcasting
-  node:
-    image: node:12
+  frontend:
+    build:
+      dockerfile: .docker/frontend/Dockerfile
+      context: .
     volumes:
-      - ./:/myapp
+      - ./webpack.mix.js:/app/webpack.mix.js
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
+      - ./resources:/app/resources
+      - ./public:/app/public
+    command: [ 'npm', 'run', 'watch-poll' ]
   websocket:
     build:
       dockerfile: .docker/websocket/Dockerfile
