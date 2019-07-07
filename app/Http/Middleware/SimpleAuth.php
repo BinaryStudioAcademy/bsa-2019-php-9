@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Services\Contracts\AuthService;
 
 class SimpleAuth
 {
@@ -28,8 +29,6 @@ class SimpleAuth
             return $next($request);
         } catch (\LogicException $e) {
             return response()->json([ "error" => $e->getMessage() ], 403);
-        } catch (\Exception $e) {
-            return response()->json([ "error" => 'something went wrong' ], 403);
         }
     }
 }

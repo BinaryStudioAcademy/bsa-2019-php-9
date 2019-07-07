@@ -2,7 +2,7 @@
     <div
         :style="{ width: width + 'px', height: height + 'px' }"
     >
-        <img v-if="src" src="src">
+        <img v-if="src" :src="src">
         <span v-else-if="processing" class="processing">Processing</span>
         <span v-else>{{ width }}x{{ height }}</span>
     </div>

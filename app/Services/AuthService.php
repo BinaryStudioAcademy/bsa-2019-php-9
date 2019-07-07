@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\Contracts\AuthService as IAuthService;
 use App\Repositories\Contracts\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use App\Values\Auth\UserData;
 use App\Values\Auth\Token;
 use App\Entities\User;
@@ -21,11 +22,17 @@ class AuthService implements IAuthService
     {
         $userData = Token::parse($token);
 
-        $user = $this->userRepository->findByUserData($userData);
+        $user = $this->userRepository->findByEmail($userData->email);
 
         if ($user === null) {
             throw new \LogicException('User does not exist');
         }
+
+        if ($userData->checkPassword($user->password) === false) {
+            throw new \LogicException('Password is incorrect');
+        }
+
+        Auth::login($user);
 
         return $user;
     }

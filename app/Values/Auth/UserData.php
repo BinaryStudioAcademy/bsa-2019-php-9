@@ -8,7 +8,7 @@ class UserData
 {
     public $name;
     public $email;
-    public $password;
+    private $password;
 
     public function __construct(string $email, string $password, string $name = '')
     {
@@ -22,6 +22,20 @@ class UserData
 
         $this->name = $name;
         $this->email = $email;
-        $this->password = Hash::make($password);
+        $this->password = $password;
+    }
+
+    public function checkPassword($hash): bool
+    {
+        return Hash::check($this->password, $hash);
+    }
+
+    public function __get($name)
+    {
+        if ($name !== 'password') {
+            return null;
+        }
+
+        return Hash::make($this->password);
     }
 }

@@ -54,16 +54,26 @@ POST /api/photos
 multipart/form-data
 ```
 
+Используйте middleware "auth" для этого ресурса, чтобы пользователь аутентифицировался.
+
+Изображения нужно [сохранять](https://laravel.com/docs/5.8/filesystem#file-uploads) в директорию `storage/app/public/images`.
+
 5) Создайте миграцию для модели загрузки фото `App\Entites\Photo`:
 
 | name           | type                        | Description                                                                                   |
 |----------------|-----------------------------|-----------------------------------------------------------------------------------------------|
 | id             | uint                        |                                                                                               |
+| user_id        | uint                        | id of user who uploaded image                                                                 |
 | original_photo | varchar(255)                | path to original file on the server                                                           |
-| photo_100_100    | varchar(255)                | image 100x100 px                                                                                |
+| photo_100_100  | varchar(255)                | image 100x100 px                                                                              |
 | photo_150_150  | varchar(255)                | image 150х150 px                                                                              |
 | photo_250_250  | varchar(255)                | image 250x250 px                                                                              |
-| status         | enum(UPLOADED,PROCESSING,SUCCESS,FAIL) | UPLOADED - original image saved;<br /> PROCESSING - processing image started;<br /> SUCCESS - image has been processed<br />FAIL - image has not been processed |
+| status         | enum(UPLOADED,PROCESSING,SUCCESS,FAIL) | status of processing photo |
+
+UPLOADED - оригинальное изображение загружено; \
+PROCESSING - начало обработки изображения; \
+SUCCESS - изображение обработано успешно; \
+FAIL - изображение обработано с ошибками
 
 6) Создайте job'у для обработки изображения `App\Jobs\ResizeJob`
 
@@ -75,7 +85,7 @@ Frontend:
 
 В файле `resources/js/components/App.vue`:
 
-1) Вам нужно отправить файл на endpoint `/api/photos` в методе `onFile()`
+1) Вам нужно отправить файл на endpoint `/api/photos` в методе `onFile()` при помощи `resources/js/services/requestService.js`
 
 2) В методе `mounted()` нужно подписаться на канал уведомлений и изменять статус обработки и загрузки изображений при помощи данных методов (`addImage`, `success`, `fail`, `processing`).
 
@@ -114,8 +124,6 @@ docker-compose logs -f frontend
 ```
 
 Необходимые библиотеки предустановлены (`laravel-echo`, `socket.io`, `axios`) и настроены в файле `resources/js/bootstrap.js`.
-
-Также для удобства отправки файла можно использовать `resources/js/services/requestService.js`.
 
 Вы можете свободно добавлять или удалять код, если это необходимо для выполнения задания.
 

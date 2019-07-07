@@ -5,7 +5,7 @@ const auth = (request) => {
     const token = authService.getToken(user.email, user.password);
 
     return request({
-        'WWw-Authenticate': `${token}`
+        'WWW-Authenticate': `${token}`
     });
 };
 
@@ -22,7 +22,7 @@ const get = (url, params) => auth((headers) => axios.get(url, { params }, { head
 const file = (url, file) => {
     const fd = new FormData();
 
-    fd.append('file', file);
+    fd.append('photo', file);
 
     return post(url, fd, {
         'Content-type': 'multipart/form-data',        

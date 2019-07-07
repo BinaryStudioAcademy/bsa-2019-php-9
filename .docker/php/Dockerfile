@@ -13,6 +13,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql
 
 RUN addgroup --gid=$GID appuser \
-    && useradd -r -u $UID -g appuser appuser
+    && useradd -r -u $UID -g appuser appuser \
+    && mkdir -p /home/appuser \
+    && chown appuser:appuser /home/appuser
+
+RUN mkdir -p public/storage \
+    && ln -s /app/storage/app/public /app/public/storage/files
 
 USER appuser
