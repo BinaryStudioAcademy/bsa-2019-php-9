@@ -56,7 +56,7 @@ multipart/form-data
 
 Используйте middleware "auth" для этого ресурса, чтобы пользователь аутентифицировался.
 
-Изображения нужно [сохранять](https://laravel.com/docs/5.8/filesystem#file-uploads) в директорию `storage/app/public/images`.
+Изображения нужно [сохранять](https://laravel.com/docs/5.8/filesystem#file-uploads) в директорию `storage/app/public/images/<user_id>`.
 
 5) Создайте миграцию для модели загрузки фото `App\Entites\Photo`:
 
