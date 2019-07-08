@@ -10,4 +10,6 @@ interface AuthService
     public function register(UserData $userData): User;
 
     public function auth(string $token): User;
+
+    public function getUser(): User;
 }

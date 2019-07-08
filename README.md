@@ -32,14 +32,14 @@ Backend:
 1) Запустите docker окружение
     
 ```bash
-docker-compose up -d
 cp .env.example .env
-docker-compose exec composer install
+docker-compose up -d
+docker-compose run --rm composer install
 docker-compose exec php php artisan key:generate
 docker-compose exec php php artisan migrate
 ```
 
-2) Настройте очередь сообщений `beanstalkd` в Laravel. В предоставленном Docker окружении beanstalk сервер уже установлен. Имейте ввиду, что внутри контейнера имя хоста соответствует имени сервиса в docker-compose (т.е. hostname = 'beanstalk').
+2) Настройте очередь сообщений `beanstalkd` в Laravel. В предоставленном Docker окружении beanstalk сервер уже установлен. Имейте ввиду, что внутри контейнера имя хоста соответствует имени сервиса в docker-compose (т.е. hostname = 'beanstalk'). Также учтите, что библиотека `pheanstalk`, также не предустановлена.
 
 3) Запустите очередь внутри контейнера `php`
 
@@ -54,26 +54,26 @@ POST /api/photos
 multipart/form-data
 ```
 
-Используйте middleware "auth" для этого ресурса, чтобы пользователь аутентифицировался.
+Используйте middleware "auth" для этого ресурса, чтобы пользователь был аутентифицирован.
 
-Изображения нужно [сохранять](https://laravel.com/docs/5.8/filesystem#file-uploads) в директорию `storage/app/public/images`.
+Изображения нужно [сохранять](https://laravel.com/docs/5.8/filesystem#file-uploads) в директорию `storage/app/public/images/{user_id}`.
 
 5) Создайте миграцию для модели загрузки фото `App\Entites\Photo`:
 
-| name           | type                        | Description                                                                                   |
-|----------------|-----------------------------|-----------------------------------------------------------------------------------------------|
-| id             | uint                        |                                                                                               |
-| user_id        | uint                        | id of user who uploaded image                                                                 |
-| original_photo | varchar(255)                | path to original file on the server                                                           |
-| photo_100_100  | varchar(255)                | image 100x100 px                                                                              |
-| photo_150_150  | varchar(255)                | image 150х150 px                                                                              |
-| photo_250_250  | varchar(255)                | image 250x250 px                                                                              |
-| status         | enum(UPLOADED,PROCESSING,SUCCESS,FAIL) | status of processing photo |
+| name           | type                                                                | Description                                           |
+|----------------|---------------------------------------------------------------------|-------------------------------------------------------|
+| id             | ubigint                                                                |                                                       |
+| user_id        | ubigint                                                                | id of user who uploaded image                         |
+| original_photo | varchar(255)                                                        | path to original file on the server                   |
+| photo_100_100  | varchar(255)                                                        | image 100x100 px                                      |
+| photo_150_150  | varchar(255)                                                        | image 150х150 px                                      |
+| photo_250_250  | varchar(255)                                                        | image 250x250 px                                      |
+| status         | enum(UPLOADED,PROCESSING,SUCCESS,FAIL)                              | status of processing photo                            |
 
-UPLOADED - оригинальное изображение загружено; \
-PROCESSING - начало обработки изображения; \
-SUCCESS - изображение обработано успешно; \
-FAIL - изображение обработано с ошибками
+- UPLOADED - оригинальное изображение загружено;
+- PROCESSING - начало обработки изображения;
+- SUCCESS - изображение обработано успешно;
+- FAIL - изображение обработано с ошибками
 
 6) Создайте job'у для обработки изображения `App\Jobs\ResizeJob`
 

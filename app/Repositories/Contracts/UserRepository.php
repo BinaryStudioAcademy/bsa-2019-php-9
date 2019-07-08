@@ -2,7 +2,6 @@
 
 namespace App\Repositories\Contracts;
 
-use App\Values\Auth\UserData;
 use App\Entities\User;
 
 interface UserRepository

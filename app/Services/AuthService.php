@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Services\Contracts\AuthService as IAuthService;
 use App\Repositories\Contracts\UserRepository;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\Factory as Auth;
 use App\Values\Auth\UserData;
 use App\Values\Auth\Token;
 use App\Entities\User;
@@ -12,10 +12,12 @@ use App\Entities\User;
 class AuthService implements IAuthService
 {
     private $userRepository;
+    private $auth;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, Auth $auth)
     {
         $this->userRepository = $userRepository;
+        $this->auth = $auth->guard();
     }
 
     public function auth(string $token): User
@@ -32,7 +34,7 @@ class AuthService implements IAuthService
             throw new \LogicException('Password is incorrect');
         }
 
-        Auth::login($user);
+        $this->auth->setUser($user);        
 
         return $user;
     }
@@ -48,6 +50,11 @@ class AuthService implements IAuthService
         $user = $this->userRepository->store($user);
 
         return $user;
+    }
+
+    public function getUser(): User
+    {
+        return $this->auth->user();
     }
 }
 
