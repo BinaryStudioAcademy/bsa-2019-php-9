@@ -25,19 +25,15 @@ class PhotoService implements IPhotoService
         $croppedImage = Image::make(
             Storage::path($pathToPhoto)
         )->crop($width, $height);
-        $filePath = Storage::path(
-            'cropped/'
+        $filePath = 'cropped/'
             . Str::random(40)
             . '.'
-            . $croppedImage->extension
-        );
+            . $croppedImage->extension;
 
-        $this->fileSystem
-            ->disk('local')
-            ->put(
-                $filePath,
-                $croppedImage->stream()
-            );
+        $this->fileSystem->put(
+            $filePath,
+            $croppedImage->stream()
+        );
 
         return $filePath;
     }
