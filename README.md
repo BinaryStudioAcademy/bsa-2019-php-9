@@ -75,7 +75,7 @@ multipart/form-data
 - SUCCESS - изображение обработано успешно;
 - FAIL - изображение обработано с ошибками
 
-6) Создайте job'у для обработки изображения `App\Jobs\ResizeJob`
+6) Создайте job'у для обработки изображения `App\Jobs\CropJob`, в которой с помощью метода `App\Services\PhotoService::crop` сгенерируйте копии изображения.
 
 7) Создайте уведомления:
 - `App\Notifications\ImageProcessingNotification` - для отправки пуш уведомления со статусом начала обработки (`processing`)
