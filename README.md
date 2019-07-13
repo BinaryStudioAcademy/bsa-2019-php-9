@@ -18,8 +18,8 @@ Dear <user name>,
 Photos have been successfuly uploaded and processed.
 Here are links to the images:
 
-<url to 50x50 photo>
 <url to 100x100 photo>
+<url to 150x150 photo>
 <url to 250x250 photo>
 
 Thanks!
@@ -39,7 +39,7 @@ docker-compose exec php php artisan key:generate
 docker-compose exec php php artisan migrate
 ```
 
-2) Настройте очередь сообщений `beanstalkd` в Laravel. В предоставленном Docker окружении beanstalk сервер уже установлен. Имейте ввиду, что внутри контейнера имя хоста соответствует имени сервиса в docker-compose (т.е. hostname = 'beanstalk'). Также учтите, что библиотека `pheanstalk`, также не предустановлена.
+2) Настройте очередь сообщений `beanstalkd` в Laravel. В предоставленном Docker окружении beanstalk сервер уже установлен. Имейте ввиду, что внутри контейнера имя хоста соответствует имени сервиса в docker-compose (т.е. hostname = 'beanstalk'). Также учтите, что PHP библиотека для работы с beanstalk не предустановлена. 
 
 3) Запустите очередь внутри контейнера `php`
 
@@ -58,16 +58,18 @@ multipart/form-data
 
 Изображения нужно [сохранять](https://laravel.com/docs/5.8/filesystem#file-uploads) в директорию `storage/app/public/images/{user_id}`.
 
+В публичном доступе файлы будут доступны по пути `/storage/files/images/{user_id}`
+
 5) Создайте миграцию для модели загрузки фото `App\Entites\Photo`:
 
 | name           | type                                                                | Description                                           |
 |----------------|---------------------------------------------------------------------|-------------------------------------------------------|
-| id             | ubigint                                                                |                                                       |
-| user_id        | ubigint                                                                | id of user who uploaded image                         |
-| original_photo | varchar(255)                                                        | path to original file on the server                   |
-| photo_100_100  | varchar(255)                                                        | image 100x100 px                                      |
-| photo_150_150  | varchar(255)                                                        | image 150х150 px                                      |
-| photo_250_250  | varchar(255)                                                        | image 250x250 px                                      |
+| id             | unsignedBigInteger                                                  | PK                                                    |
+| user_id        | unsignedBigInteger                                                  | id of user who uploaded image                         |
+| original_photo | char(255)                                                           | path to original file on the server                   |
+| photo_100_100  | char(255)                                                           | image 100x100 px                                      |
+| photo_150_150  | char(255)                                                           | image 150х150 px                                      |
+| photo_250_250  | char(255)                                                           | image 250x250 px                                      |
 | status         | enum(UPLOADED,PROCESSING,SUCCESS,FAIL)                              | status of processing photo                            |
 
 - UPLOADED - оригинальное изображение загружено;
@@ -80,6 +82,8 @@ multipart/form-data
 7) Создайте уведомления:
 - `App\Notifications\ImageProcessedNotification` - для отправки пуш уведомления со статусом `success` и изображениями. А также отправкой e-mail сообщения пользователю.
 - `App\Notifications\ImageProcessingFailedNotification` - для отправки пуш уведомления со статусом `fail`.
+
+для отправки e-mail сообщений используйте `log` драйвер, он уже предустановлен в .env.example. Отправленные сообщения можно будет найти в `storage/logs/`
 
 Frontend:
 
@@ -100,11 +104,16 @@ __Форкать репозиторий запрещено!__
 1) Тесты проходят: 4 балла
 2) Все пункты задания выполнены корректно:
 
-    a) изображения генерируются - 1 балл \
-    b) статус загрузки меняется на фронтенде без перезагрузки страницы: 1 балл\
-    c) изображения добавляются на странице без перезагрузки: 1 балл\
-    d) e-mail сообщение отправляется пользователю: 1 балл \
+    a) изображения генерируются - 1 балл
+
+    b) статус загрузки меняется на фронтенде без перезагрузки страницы: 1 балл
+
+    c) изображения добавляются на странице без перезагрузки: 1 балл
+
+    d) e-mail сообщение отправляется пользователю: 1 балл 
+
     e) информация об изображении сохраняется в базе данных: 1 балл
+
 3) Код написан чисто и аккуратно в соответствии со стандартом [PSR-2](https://www.php-fig.org/psr/psr-2/), без комментариев в коде, без функций отладки: 1 балл
 
 __изменять тесты запрещено!__
@@ -127,8 +136,6 @@ docker-compose logs -f frontend
 
 Необходимые библиотеки предустановлены (`laravel-echo`, `socket.io`, `axios`) и настроены в файле `resources/js/bootstrap.js`.
 
-Вы можете свободно добавлять или удалять код, если это необходимо для выполнения задания.
-
 Websocket-сервер также установлен и настроен.
 
 Полезные комманды:
@@ -136,4 +143,5 @@ Websocket-сервер также установлен и настроен.
 ```bash
 docker-compose run --rm composer require ... # установка composer зависимостей
 docker-compose exec frontend npm install ... # установка npm зависимостей
+docker-compose logs -f websocket ... # лог веб-сокет сервереа
 ```
