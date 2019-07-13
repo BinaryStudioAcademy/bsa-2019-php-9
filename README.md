@@ -78,16 +78,16 @@ multipart/form-data
 6) Создайте job'у для обработки изображения `App\Jobs\CropJob`, в которой с помощью метода `App\Services\PhotoService::crop` сгенерируйте копии изображения.
 
 7) Создайте уведомления:
-- `App\Notifications\ImageProcessingNotification` - для отправки пуш уведомления со статусом начала обработки (`processing`)
-- `App\Notifications\ImageProcessedNotification` - для отправки пуш уведомления со статусом обработки (`success` или `fail`) и изображениями. А также отправкой e-mail сообщения пользователю.
+- `App\Notifications\ImageProcessedNotification` - для отправки пуш уведомления со статусом `success` и изображениями. А также отправкой e-mail сообщения пользователю.
+- `App\Notifications\ImageProcessingFailedNotification` - для отправки пуш уведомления со статусом `fail`.
 
 Frontend:
 
 В файле `resources/js/components/App.vue`:
 
-1) Вам нужно отправить файл на endpoint `/api/photos` в методе `onFile()` при помощи `resources/js/services/requestService.js`
+1) Вам нужно отправить файл на endpoint `/api/photos` в методе `onFile()` при помощи `resources/js/services/requestService.js`. После отправки необходимо установить статус (`processing`)
 
-2) В методе `mounted()` нужно подписаться на канал уведомлений и изменять статус обработки и загрузки изображений при помощи данных методов (`addImage`, `success`, `fail`, `processing`).
+2) В методе `onAuth()` нужно подписаться на канал уведомлений и изменять статус обработки и загрузки изображений при помощи данных методов (`addImage`, `fail`, `success`).
 
 # Проверка
 
@@ -106,6 +106,8 @@ __Форкать репозиторий запрещено!__
     d) e-mail сообщение отправляется пользователю: 1 балл \
     e) информация об изображении сохраняется в базе данных: 1 балл
 3) Код написан чисто и аккуратно в соответствии со стандартом [PSR-2](https://www.php-fig.org/psr/psr-2/), без комментариев в коде, без функций отладки: 1 балл
+
+__изменять тесты запрещено!__
 
 Чтобы проверить себя, вы можете запустить тесты командой:
 

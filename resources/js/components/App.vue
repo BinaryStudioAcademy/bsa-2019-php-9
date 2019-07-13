@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-10">
-                <auth>
+                <auth v-on:auth="onAuth">
                     <template v-slot:title>Resize Photo </template>
                     <div class="row">
                         <div class="col-md-4 file-input-container">
@@ -45,6 +45,7 @@ import Auth from './Auth/Auth'
 import FileInput from './FileInput';
 import ImageContainer from './Image';
 import requestService from '../services/requestService';
+import echoService from '../services/echoService';
 
 export default {
     components: {
@@ -67,6 +68,12 @@ export default {
             this.images[size] = url;
         },
 
+        resetImages() {
+            this.addImage(100, '');
+            this.addImage(150, '');
+            this.addImage(250, '');
+        },
+
         success() {
             this.status = 'success';
         },
@@ -77,14 +84,17 @@ export default {
 
         processing() {
             this.status = 'processing';
+            this.resetImages();
         },
 
         onFile(file) {
             // !! HERE SENDING FILE !!
+        },
+
+        onAuth(user) {
+            /* !! HERE NOTIFICATION SUBSCRIPTION !! */
+            const Echo = echoService.getEchoInstance(user);
         }
-    },
-    mounted() {
-        /* !! HERE NOTIFICATION SUBSCRIPTION !! */
     }
 }
 </script>

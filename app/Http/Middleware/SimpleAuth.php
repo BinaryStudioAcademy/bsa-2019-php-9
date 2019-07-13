@@ -29,6 +29,8 @@ class SimpleAuth
             return $next($request);
         } catch (\LogicException $e) {
             return response()->json([ "error" => $e->getMessage() ], 403);
+        } catch (\Exception $e) {
+            return response()->json([ "error" => 'not authenticated' ], 403);
         }
     }
 }

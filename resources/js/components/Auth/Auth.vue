@@ -35,15 +35,19 @@ export default {
         logout() {
             this.isAuthenticated = false;
             authService.logout();
+            this.$emit('logout');
         },
         onAuth() {
             this.isAuthenticated = true;
+
+            this.$emit('auth', authService.getUser());
         }
     },
     mounted() {
         try {
             const user = authService.getUser();
 
+            this.$emit('auth', user);
             this.isAuthenticated = true;
         } catch (e) {
             this.isAuthenticated = false;
