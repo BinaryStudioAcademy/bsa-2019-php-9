@@ -80,6 +80,7 @@ multipart/form-data
 6) Создайте job'у для обработки изображения `App\Jobs\CropJob`, в которой с помощью метода `App\Services\PhotoService::crop` сгенерируйте копии изображения.
 
 7) Создайте уведомления:
+
 - `App\Notifications\ImageProcessedNotification` - для отправки пуш уведомления со статусом `success` и изображениями. А также отправкой e-mail сообщения пользователю.
 - `App\Notifications\ImageProcessingFailedNotification` - для отправки пуш уведомления со статусом `fail`.
 
