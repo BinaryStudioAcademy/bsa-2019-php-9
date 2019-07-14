@@ -38,7 +38,9 @@ services:
     networks:
       - queue
   mariadb:
-    image: mariadb:latest
+    build:
+      dockerfile: .docker/db/Dockerfile
+      context: .
     env_file:
       - .env
     environment:
