@@ -132,7 +132,7 @@ class TaskTest extends TestCase
                 $mailData = (string) $notification->toMail($user)->render();
 
                 $this->assertContains("Dear {$user->name},", $mailData);
-                $this->assertContains("Photos have been successfuly uploaded and processed.", $mailData);
+                $this->assertContains("Photos have been successfully uploaded and processed.", $mailData);
                 $this->assertContains("Here are links to the images:", $mailData);
                 $this->assertContains($photo->photo_100_100, $mailData);
                 $this->assertContains($photo->photo_150_150, $mailData);
