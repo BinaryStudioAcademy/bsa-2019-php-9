@@ -58,7 +58,9 @@ multipart/form-data
 
 Изображения нужно [сохранять](https://laravel.com/docs/5.8/filesystem#file-uploads) в директорию `storage/app/public/images/{user_id}`.
 
-В публичном доступе файлы будут доступны по пути `/storage/files/images/{user_id}`
+В публичном доступе файлы будут доступны по пути `/storage/files/images/{user_id}`.
+
+Сохранять изображения нужно с иходным именем.
 
 5) Создайте миграцию таблице `photos` и модель `App\Entites\Photo`:
 
@@ -77,7 +79,11 @@ multipart/form-data
 - SUCCESS - изображение обработано успешно;
 - FAIL - изображение обработано с ошибками
 
-6) Создайте job'у для обработки изображения `App\Jobs\CropJob`, в которой с помощью метода `App\Services\PhotoService::crop` сгенерируйте копии изображения.
+6) Создайте job'у для обработки изображения `App\Jobs\CropJob`, в которой с помощью метода `App\Services\PhotoService::crop` сгенерируйте копии изображения с именами:
+
+`images/<user_id>/<original_name>100x100.<extension>`
+`images/<user_id>/<original_name>150x150.<extension>`
+`images/<user_id>/<original_name>250x250.<extension>`
 
 7) Создайте уведомления:
 
@@ -92,7 +98,7 @@ Frontend:
 
 1) Вам нужно отправить файл на endpoint `/api/photos` в методе `onFile()` при помощи `resources/js/services/requestService.js`. После отправки необходимо установить статус (`processing`)
 
-2) В методе `onAuth()` нужно подписаться на канал уведомлений и изменять статус обработки и загрузки изображений при помощи данных методов (`addImage`, `fail`, `success`).
+2) В методе `onAuth()` нужно подписаться на канал уведомлений пользователя. В зависимости от статуса вызывать методы `fail` и `success`. И, если изображения обработаны успешно, отображать их при помощи `addImage`.
 
 # Проверка
 

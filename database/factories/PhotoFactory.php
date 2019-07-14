@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Photo::class, function (Faker $faker) {
     return [
         'user_id' => factory(App\Entities\User::class)->create()->id,
-        'original_photo' => $faker->file(__DIR__ . '../../tests/storage/'),
+        'original_photo' => '',
         'photo_100_100' => '',
         'photo_150_150' => '',
         'photo_250_250' => '',
