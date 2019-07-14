@@ -1,12 +1,17 @@
 import authService from './authService';
 
-const auth = (request) => {
-    const user = authService.getUser();
+const getAuthHeader = (user) => {
     const token = authService.getToken(user.email, user.password);
 
-    return request({
+    return {
         'WWW-Authenticate': `${token}`
-    });
+    };
+};
+
+const auth = (request) => {
+    const user = authService.getUser();
+
+    return request(getAuthHeader(user));
 };
 
 const post = (url, data, headers = {}) => auth((authHeader) => axios.post(url, data, {
@@ -30,6 +35,7 @@ const file = (url, file) => {
 }
 
 const requestService = {
+    getAuthHeader,
     post,
     get,
     file

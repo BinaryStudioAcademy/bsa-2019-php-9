@@ -1,6 +1,6 @@
 <template>
     <label :class="{ success: success, fail: fail }">
-        <input ref="file" type="file" v-on:change="onChange">
+        <input ref="file" type="file" v-on:change="onChange" v-on:click="reset">
         <span class="placeholder">Upload<br />Photo</span>
     </label>
 </template>
@@ -18,8 +18,13 @@
             }
         },
         methods: {
-            onChange() {
-                this.$emit('change', this.$refs.file.files[0]);
+            onChange(e) {
+                const file = this.$refs.file.files.item(0);
+
+                this.$emit('change', file);
+            },
+            reset(e) {
+                e.target.value = null;
             }
         }
     }

@@ -13,5 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('/broadcasting/auth', function (Request $request) {
+    return response()->json([], 200);
+})->middleware('auth');
+
 Route::post('/users', 'Auth\AuthController@register');
 Route::post('/auth', 'Auth\AuthController@auth');
