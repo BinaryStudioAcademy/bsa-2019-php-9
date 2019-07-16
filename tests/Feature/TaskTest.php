@@ -70,7 +70,7 @@ class TaskTest extends TestCase
 
         Queue::assertPushed(CropJob::class, function ($job) use ($user, $fileName) {
             return (
-                $job->photo->id === $user->id
+                $job->photo->user_id === $user->id
                 &&
                 $job->photo->original_photo === $fileName
             );
